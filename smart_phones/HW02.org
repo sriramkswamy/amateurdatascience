@@ -1,0 +1,353 @@
+#+TITLE: Homework 2
+#+AUTHOR: Sriram Krishnaswamy
+#+DATE: 
+#+OPTIONS: toc:nil num:nil
+#+LATEX_HEADER: \usepackage[margin=2cm]{geometry}
+
+* Problem statement
+
+\noindent
+There have been rising sales of smartphones and currently they are at an all time high
+with Samsung and Apple combined contributing to [[http://www.tbreak.com/smartphone-sales-performance-q2-2015/][over 35 percent of sales]] of all smartphones.
+This implies there are a lot of mobile phones currently and it is estimated there will be over
+[[http://www.statista.com/statistics/201182/forecast-of-smartphone-users-in-the-us/][196 million smartphones]] by 2016. That is a lot of smartphones. With so many choices to choose
+from, it is easy to end up with a defective one, like my roommate, whose phone stopped working
+after just 2 weeks of purchase.
+\vspace{0.25cm}
+
+\noindent
+I was curious to learn more about the probability that the purchased device will fail. I have
+restricted myself to Motorola devices, simply because it was my roommate's device. I intend to
+use Bayesian Estimation to find out the probability that a Motorola device fails.
+
+* Solution
+
+\noindent
+First, we need to estimate the probability that person who wants to buy a phone, buys a
+Motorola one. This can be done by Bayes theorem for probability. The market share for Android
+for the second quarter in 2015 [[http://www.idc.com/prodserv/smartphone-os-market-share.jsp][is 82.85%]]. So, it is highly likely that one ends up with an
+Android phone. But since we are restricting ourselves to Motorola, we need to see the market
+share of Motorola in Android, which is just 4.7% of the Android share.
+\vspace{0.25cm}
+
+\noindent
+Let $P(A)$ be the probability of getting an Android phone and $P(M)$ be probability of getting
+a Motorola phone, then,
+
+\[
+P(M) = P(M|A)P(A) = \frac{4.7}{100} \times \frac{82.8}{100} = 0.038916
+\] 
+
+\noindent
+Next, we move on to calculating the defects. We assume a Beta distribution for the prior and
+a uniform one at that because we have no information and the purchased device can be good
+or fail.
+\vspace{0.25cm}
+
+\noindent
+The way we choose our prior and likelihood play an important role in the resulting posterior.
+Here, since the device may either fail or not fail, we can assume the likelihood function
+to be a binomial distribution with the probability of failure to be $\theta$ and the prior
+to be a uniform beta distribution. This would imply the posterior is also a beta distribution
+due to conjugacy.
+\vspace{0.25cm}
+
+\noindent
+A beta distribution is given by
+
+\[
+beta(x; \alpha, \beta) = \frac{\Gamma (\alpha + \beta)}{\Gamma (\alpha) \Gamma (\beta)}
+x^{\alpha - 1}(1 - x)^{\beta - 1}
+\]
+
+\noindent
+The prior so far is non-informative and hence, we need to assume uniform distribution, we have to
+choose $\alpha$ and $\beta$ carefully. We know the mean and variance of a beta distribution as
+
+\[
+\mu_{\beta} = \frac{\alpha}{\alpha + \beta}
+\]
+
+\[
+\sigma^{2}_{\beta} = \frac{\alpha \beta}{(\alpha + \beta)^2 (\alpha + \beta + 1)}
+\]
+
+\noindent
+To achieve uniform distribution, we need to have both $\alpha$ and $\beta$ to be 1.
+
+\[
+\implies \mu_{\beta} = \frac{1}{1 + 1} = 0.5
+\]
+
+\[
+\implies \sigma^{2}_{\beta} = \frac{1}{4 \times 3} = 0.08333
+\]
+
+\noindent
+Plotting this beta distribution using the snippet [[hw02_prior_distribution][1]] results in
+Figure [[hw02_prior_distribution_figure][1]]
+
+#+NAME: hw02_prior_distribution_figure
+#+CAPTION: Non-informative Prior distribution 
+#+ATTR_LaTeX: scale=0.75
+#+LABEL: fig:hw02_prior_distribution
+[[./hw02_prior_distribution.png]]
+
+\noindent
+I had also taken a small survey of 10 friends with Motorola devices of which only my roommate
+had suffered this plight. I intend to use this as the likelihood function but before that, we
+need to fine tune our prior function.
+\vspace{0.25cm}
+
+\noindent
+It is well known that Motorola [[http://usatoday30.usatoday.com/money/companies/management/2002-10-30-sixsigma_x.htm][is a six sigma company]] and was the first one to introduce it.
+While this may still be true, we assume that it is now a four sigma company. The information that
+we get by this is rather interesting. It is known that six sigma implies that the company is
+99.99966% accurate in its decisions. This includes manufacturing too and we can assume that
+out of every million devices manufactured by Motorola 3.4 are defective. We can present this
+as a binomial distribution as shown in Figure [[hw02_binomial_distribution_figure][2]] achieved from snippet [[hw02_binomial_distribution][2]].
+\vspace{0.25cm}
+
+\[
+P(x| \theta) = \binom nk \theta^{x} (1 - \theta)^{n-x}
+\]
+
+\noindent
+Here, we assume $\theta$ to be the probability of failure and that is $3.4 \times 10^{-6}$.
+\vspace{0.25cm}
+
+#+NAME: hw02_binomial_distribution_figure
+#+CAPTION: Binomial distribution of Failure
+#+ATTR_LaTeX: scale=0.75
+#+LABEL: fig:hw02_binomial_distribution
+[[./hw02_binomial_distribution.png]]
+
+\noindent
+Utilizing this knowledge of six sigma, we construct a informative prior distribution. A beta
+distribution needs to be chosen based on the mean from six sigma relation and we choose the
+samples to be 1 million due to the same reason. Note that, this would mean that our prior is
+very accurate. If the mean were to be $3.4 \times 10^{-6}$ for a million samples, then
+
+\[
+\alpha = 3.4 \times 10^{-6} \times 10^{6} = 3.4
+\]
+
+\[
+\beta = (1 - 3.4 \times 10^{-6}) \times 10^{6} = 999996.6
+\]
+
+\noindent
+Now, we come to the aspect of calculating the likelihood of the failure. This is a binomially
+distributed variable since there can only be two possibilities - failure of the phone or not.
+Let us assume $\theta$ to be the probability of failure since that is what we desire.
+\vspace{0.25cm}
+
+\noindent
+Plotting this beta distribution using the snippet [[hw02_informative_prior_distribution][3]] results in
+Figure [[hw02_informative_prior_distribution_figure][3]] which as we can see is approximated to 0 because of the small mean from the six sigma.
+Hence, just for the sake of this analysis, I intend to use this as a binomial likelihood function
+assuming this was the data I collected. This is going to be combined with non-informative prior
+to give a posterior function.
+\vspace{0.25cm}
+
+#+NAME: hw02_informative_prior_distribution_figure
+#+CAPTION: Informative Prior distribution 
+#+ATTR_LaTeX: scale=0.75
+#+LABEL: fig:hw02_informative_prior_distribution
+[[./hw02_informative_prior_distribution.png]]
+
+\noindent
+Due to conjugacy, the posterior is also a beta function. This can be calculated by adding the
+likelihood function to the prior resulting in $beta(x;3.4,999996.6)$ which is practically the
+same as the graph we got from informative prior in Figure [[hw02_informative_prior_distribution_figure][3]].
+\vspace{0.25cm}
+
+* Illustratory solution
+
+\noindent
+While the above section describes the actual solution, it is impossible to visualize any data
+because of the small nature of the mean. Therefore, for illustratory purposes, I'm going to
+assume that 2% of Motorola phones fail. Now, we use this as our informative prior over 10
+samples.
+
+\[
+\alpha = 0.02 \times 10 = 0.2
+\]
+
+\[
+\beta = (1 - 0.02) \times 10 = 9.8
+\]
+
+\noindent
+This results in $beta(x; 0.2, 9.8)$ as shown in Figure [[hw02_illustratory_prior_distribution_figure][4]] generated by snippet [[hw02_illustratory_prior_distribution][4]].
+\vspace{0.25cm}
+
+#+NAME: hw02_illustratory_prior_distribution_figure
+#+CAPTION: Illustratory prior distribution 
+#+ATTR_LaTeX: scale=0.75
+#+LABEL: fig:hw02_illustratory_prior_distribution
+[[./hw02_illustratory_prior_distribution.png]]
+
+\noindent
+Next, we combine this with my survey and the resulting likelihood function as shown in
+Figure [[hw02_illustratory_likelihood_distribution_figure][4]] generated by snippet [[hw02_illustratory_likelihood_distribution][4]].
+\vspace{0.25cm}
+
+#+NAME: hw02_illustratory_likelihood_distribution_figure
+#+CAPTION: Illustratory likelihood distribution 
+#+ATTR_LaTeX: scale=0.75
+#+LABEL: fig:hw02_illustratory_likelihood_distribution
+[[./hw02_illustratory_likelihood_distribution.png]]
+
+\noindent
+Finally, we get our posterior to be $beta(x; 2.2, 19.8)$ as shown in
+Figure [[hw02_illustratory_posterior_distribution_figure][5]] generated by snippet [[hw02_illustratory_posterior_distribution][5]].
+
+#+NAME: hw02_illustratory_posterior_distribution_figure
+#+CAPTION: Illustratory posterior distribution 
+#+ATTR_LaTeX: scale=0.75
+#+LABEL: fig:hw02_illustratory_posterior_distribution
+[[./hw02_illustratory_posterior_distribution.png]]
+
+* Conclusion
+
+\noindent
+Though much cannot be quantified from our actual solution, we can arrive at two conclusions
+
+- The information prior drives the posterior 
+- The likelihood doesn't have a lot of effect on the outcome
+  
+\noindent
+Similarly, the likelihood drives the posterior in this case though we have an informative prior
+in the case of illustratory solution.
+\vspace{0.25cm}
+
+\noindent
+Overall, it is safe to say that my roommate was just "unlucky" and it is highly unlikely that
+a Motorola device is defective on purchase.
+
+* Code
+
+** Prior distribution
+
+#+NAME: hw02_prior_distribution
+#+begin_src matlab :results file
+x_prior = linspace(0,1,101);
+alpha_prior = 1;
+beta_prior = 1;
+y_prior = pdf('beta', x_prior, alpha_prior, beta_prior);
+figure('visible', 'off')
+plot(x_prior, y_prior);
+print -dpng -r0 hw02_prior_distribution.png;
+ans = 'hw02_prior_distribution.png'
+#+end_src
+
+#+RESULTS: hw02_prior_distribution
+[[file:hw02_prior_distribution.png]]
+
+** Binomial distribution
+
+#+NAME: hw02_binomial_distribution
+#+begin_src matlab :results file
+x_binomial_large = linspace(0,100,101);
+x_binomial_small = linspace(0,10,101);
+num_samples = 1e6;
+theta_binomial = 3.4e-6;
+y_binomial_large = pdf('binomial', x_binomial_large, num_samples, theta_binomial);
+y_binomial_small = pdf('binomial', x_binomial_small, num_samples, theta_binomial);
+figure('visible', 'off')
+subplot(1,2,1)
+plot(x_binomial_small, y_binomial_small);
+subplot(1,2,2)
+plot(x_binomial_large, y_binomial_large);
+print -dpng -r0 hw02_binomial_distribution.png;
+ans = 'hw02_binomial_distribution.png'
+#+end_src
+
+#+RESULTS: hw02_binomial_distribution
+[[file:hw02_binomial_distribution.png]]
+
+** Informative prior
+
+#+NAME: hw02_informative_prior_distribution
+#+begin_src matlab :results file
+x_informative_prior = linspace(0,1e6,101);
+alpha_informative_prior = 3.4;
+beta_informative_prior = 999996.6;
+y_informative_prior = pdf('beta', x_informative_prior,...
+    alpha_informative_prior, beta_informative_prior);
+figure('visible', 'off')
+plot(x_informative_prior, y_informative_prior);
+print -dpng -r0 hw02_informative_prior_distribution.png;
+ans = 'hw02_informative_prior_distribution.png'
+#+end_src
+
+#+RESULTS: hw02_informative_prior_distribution
+[[file:hw02_informative_prior_distribution.png]]
+
+** Illustratory prior
+
+#+NAME: hw02_illustratory_prior_distribution
+#+begin_src matlab :results file
+x_illustratory_prior = linspace(0,1,101);
+alpha_illustratory_prior = 0.2;
+beta_illustratory_prior = 9.8;
+y_illustratory_prior = pdf('beta', x_illustratory_prior,...
+    alpha_illustratory_prior, beta_illustratory_prior);
+figure('visible', 'off')
+plot(x_illustratory_prior, y_illustratory_prior);
+print -dpng -r0 hw02_illustratory_prior_distribution.png;
+ans = 'hw02_illustratory_prior_distribution.png'
+#+end_src
+
+#+RESULTS: hw02_illustratory_prior_distribution
+[[file:hw02_illustratory_prior_distribution.png]]
+
+** Illustratory likelihood
+
+#+NAME: hw02_illustratory_likelihood_distribution
+#+begin_src matlab :results file
+x_illustratory_likelihood = linspace(0,1,101);
+alpha_uniform = 1;
+beta_uniform = 1;
+failures = 1;
+num_samples = 10;
+alpha_illustratory_likelihood = alpha_uniform + failures;
+beta_illustratory_likelihood = beta_uniform + num_samples - failures;
+y_illustratory_likelihood = pdf('beta', x_illustratory_likelihood,...
+    alpha_illustratory_likelihood, beta_illustratory_likelihood);
+figure('visible', 'off')
+plot(x_illustratory_likelihood, y_illustratory_likelihood);
+print -dpng -r0 hw02_illustratory_likelihood_distribution.png;
+ans = 'hw02_illustratory_likelihood_distribution.png'
+#+end_src
+
+#+RESULTS: hw02_illustratory_likelihood_distribution
+[[file:hw02_illustratory_likelihood_distribution.png]]
+
+** Illustratory posterior
+
+#+NAME: hw02_illustratory_posterior_distribution
+#+begin_src matlab :results file
+x_illustratory_posterior = linspace(0,1,101);
+alpha_illustratory_prior = 0.2;
+beta_illustratory_prior = 9.8;
+alpha_uniform = 1;
+beta_uniform = 1;
+failures = 1;
+num_samples = 10;
+alpha_illustratory_likelihood = alpha_uniform + failures;
+beta_illustratory_likelihood = beta_uniform + num_samples - failures;
+alpha_illustratory_posterior = alpha_illustratory_prior + alpha_illustratory_likelihood;
+beta_illustratory_posterior = beta_illustratory_prior + beta_illustratory_likelihood;
+y_illustratory_posterior = pdf('beta', x_illustratory_posterior,...
+    alpha_illustratory_posterior, beta_illustratory_posterior);
+figure('visible', 'off')
+plot(x_illustratory_posterior, y_illustratory_posterior);
+print -dpng -r0 hw02_illustratory_posterior_distribution.png;
+ans = 'hw02_illustratory_posterior_distribution.png'
+#+end_src
+
+#+RESULTS: hw02_illustratory_posterior_distribution
+[[file:hw02_illustratory_posterior_distribution.png]]
+

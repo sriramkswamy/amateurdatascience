@@ -1,0 +1,9 @@
+*.png
+*.dvi
+*.pdf
+*.tex
+*.aux
+*.log
+*.out
+*.toc
+*.xlsx
