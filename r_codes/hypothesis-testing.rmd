@@ -1,0 +1,516 @@
+---
+title: Homework 07
+author: Sriram Krishnaswamy
+---
+
+# Problem 1
+Since previous studies have reported that elite athletes are often
+deficient in their nutritional intake, a group of researchers decided
+to evaluate Canadian high performance athletes. A total of $n = 324$
+athletes from eight Canadian sports centers participated in the study.
+One reported finding was that the average caloric intake among the $n
+= 201$ women was 2403.7 kcal/day. The recommended amount is 2811.5
+kcal/day. Is there evidence that female Canadian high performance
+athletes are deficient in caloric intake?
+
+1. State the appropriate $H_0$ and $H_A$ to test this.
+2. Assuming a population standard deviation of 880 kcal/day, carry out
+   the test at the $\alpha$ = 0.05 level. Make sure to interpret the
+   results in plain language.
+
+   Now suppose a nutritionist is brought in to implement a new health
+   program for the female athletes. This program should increase mean
+   caloric intake but not change the standard deviation. Given the
+   standard deviation, and how calorically deficient these athletes
+   are, a change in the mean of 50 kcal/day to 2453.7 is of little
+   practical importance. However, with a large enough sample, this
+   change can be statistically significant. To see this, calculate the
+   P-value for the test of ${H}_{0} : \mu = 2403.7$ versus $H_A : \mu
+   > 2403.7$. in each of the following situations:
+
+3. In a sample of 500 athletes, the average caloric intake is $\bar{x}$ = 2453.7.
+4. In a sample of 2500 athletes, the average caloric intake is $\bar{x}$ = 2453.7.
+
+## Solution
+
+### Part 1
+
+The null hypothesis and alternative hypothesis are given by
+
+\[
+{H}_{0} : \mu_0 = 2811.5 \text{ kcal/day}
+\]
+
+\[
+{H}_{A} : \mu < \mu_0 \hspace{0.25cm} \text{or} \hspace{0.25cm} \mu < 2811.5 \text{ kcal/day}
+\]
+
+### Part 2
+
+Given $\sigma = 880$ kcal/day and $\alpha = 0.05$. For the sample with
+women, $\bar{x} = 2403.7$ and $n = 201$. First, we calculate the
+*z*-score of the population.
+
+\[
+z = \frac{\bar{x} - \mu}{\frac{\sigma}{\sqrt{n}}} = \frac{2403.7 -
+2811.5}{\frac{880}{\sqrt{201}}} = \frac{-407.8}{62.07} = -6.57
+\]
+
+For the alternate hypothesis, ${H}_{A} : \mu < 2811.5$, we need to
+calculate the *p*-value.
+
+\[
+p = P[z \leq -6.57]
+\]
+
+Since there are no tables for such an extreme value, we calculate it
+using R.
+
+```{r}
+pnorm(-6.57)
+```
+
+As it can be seen, the value is $\approx 0$. Therefore, we can
+conclude $p \approx 0$. At level $\alpha = 0.05$, we check $0.0 <
+0.05$ is true and *reject* the null hypothesis that $\mu = 2811.5$ in
+favor of the alternative hypothesis ${H}_{A} : \mu < 2811.5$ because
+$\bar{x} = 2403.7 < 2811.5$. In plain words, this test provides
+evidence that there is a deficiency in caloric intake among female
+Canadian high performance athletes and the sample is not just an
+outlier.
+
+### Part 3
+For this sample, $n = 500$ and $\bar{x} = 2453.7$. The standard
+deviation doesn't change and, therefore, is $\sigma = 880$ kcal/day.
+Our hypothesis test becomes
+
+\[
+{H}_{0} : \mu = 2403.7
+\]
+
+\[
+{H}_{A} : \mu > 2403.7
+\]
+
+Now, we calculate the *z*-score
+
+\[
+z = \frac{\bar{x} - \mu}{\frac{\sigma}{\sqrt{n}}} = \frac{2453.7 -
+2403.7}{\frac{880}{\sqrt{500}}} = \frac{50}{39.35} = 1.27
+\]
+
+Then, we calculate the corresponding *p*-value
+
+\[
+p = P[z \geq 1.27] = 1 - P[z < 1.27]
+\]
+
+We can perform this calculation using R.
+
+```{r}
+1 - pnorm(1.27)
+```
+
+Therefore, $p = 0.1$. If we take it at the same level $\alpha = 0.05$,
+then we have $0.1 > 0.05$ and we keep the null hypothesis that $\mu =
+2403.7$ kcal/day. In other words, a sample of 500 athletes indicating
+an average 50 kcal/day increase is not statistically significant to
+validate the new strategy by the nutritionist.
+
+### Part 4
+
+For this sample, $n = 2500$ and $\bar{x} = 2453.7$. The standard
+deviation doesn't change and, therefore, is $\sigma = 880$ kcal/day.
+Our hypothesis test becomes
+
+\[
+{H}_{0} : \mu = 2403.7
+\]
+
+\[
+{H}_{A} : \mu > 2403.7
+\]
+
+Now, we calculate the *z*-score
+
+\[
+z = \frac{\bar{x} - \mu}{\frac{\sigma}{\sqrt{n}}} = \frac{2453.7 -
+2403.7}{\frac{880}{\sqrt{2500}}} = \frac{50}{17.6} = 2.84
+\]
+
+Then, we calculate the corresponding *p*-value
+
+\[
+p = P[z \geq 2.84] = 1 - P[z < 2.84]
+\]
+
+We can perform this calculation using R.
+
+```{r}
+1 - pnorm(2.84)
+```
+
+Therefore, $p = 0.0022$. If we take it at the same level $\alpha =
+0.05$, then we have $0.0022 < 0.05$ and we *reject* the null
+hypothesis that $\mu = 2403.7$ kcal/day. In other words, a sample of
+2500 athletes indicating an average 50 kcal/day increase is
+statistically significant to validate the new strategy by the
+nutritionist.
+
+# Problem 2
+Thirty samples were taken from a stream, and the pollution level in
+parts per million (ppm) was recorded for each sample. The average
+pollution level for the data was $\bar{x}$ = 10.1ppm. Suppose that the
+population standard deviation is 2.7ppm. The investigator who
+collected the samples is interested in determining whether or not
+there is evidence that the population mean pollution level $\mu$ is
+greater than 9.5ppm. The hypotheses are:
+
+\[
+{H}_{0}: \mu = 9.5 \hspace{0.25cm} \text{vs.} \hspace{0.25cm} {H}_{A} : \mu > 9.5
+\]
+
+1. Assuming $\alpha$ = 0.05, for what values $z$ of the Z-test
+   statistic will you reject the null hypothesis?
+2. Using $\sigma$ = 2.7 and $\mu$ = 9.5 (i.e., assuming ${H}_{0}$ is
+   true), for what values of $\bar{X}$ will you reject ${H}_{0}$ at
+   $\alpha = 0.05$?
+3. Using $\sigma$ = 2.7 and $\mu$ = 10, what is the probability that
+   the statistic $\bar{X}$ will fall in the region defined in part 2?
+   This probability is the power of the test when $\mu$ = 10.
+4. Find the power of the test when $\mu$ = 11 and compare it with your
+   answer in part 3.
+
+## Solution
+We are given that $\bar{x} = 10.1$ ppm and $\hat{S} = 2.7$ ppm with $n = 30$.
+
+\[
+{H}_{0} : \mu = 9.5
+\]
+
+\[
+{H}_{A} : \mu > 9.5
+\]
+
+### Part 1
+We are going to reject the hypothesis if our region is in the upper
+tail of 0.05. In other words, if our *p*-value is less than 0.05.
+
+\[
+P[Z \geq z] < 0.05
+\]
+
+We can calculate from the table that ${z}_{0.05} = 1.645$. Our
+rejection region would be any z > 1.645. If we were doing a two-sided
+test, we have to calculate $\frac{\alpha}{2}$ in both directions.
+
+### Part 2
+From our previous part, we know that *z* > 1.645 for us to reject
+
+\[
+\frac{\bar{X} - \mu}{\frac{\sigma}{\sqrt{n}}} > 1.645
+\]
+
+\[
+\implies \frac{\bar{X} - 9.5}{\frac{2.7}{\sqrt{30}}} > 1.645
+\]
+
+\[
+\implies \bar{X} > 1.645 \left( \frac{2.7}{\sqrt{30}} \right) + 9.5 \implies \bar{X} > 10.31
+\]
+
+Therefore, we reject our null hypothesis if our sample mean,
+$\bar{X}$, is greater than 10.31 ppm.
+
+### Part 3
+We want to find the power of the test if the true mean is 10.
+
+\[
+P[\bar{X} > 10.31 | \mu = 10] = P \left[ z > \frac{10.31 - 10}{\frac{2.7}{\sqrt{30}}} \right]
+\]
+
+\[
+\implies P[z > 0.63] = 1 - P[z \leq 0.63]
+\]
+
+```{r}
+1 - pnorm(0.63)
+```
+
+Therefore, our *p*-value is 0.2643. We are going to correctly reject
+our hypothesis around 26% of the time. To prove this, we can increase
+our sample size.
+
+### Part 4
+We want to find the power of the test if the true mean is 11.
+
+\[
+P[\bar{X} > 10.31 | \mu = 11] = P \left[ z > \frac{10.31 - 11}{\frac{2.7}{\sqrt{30}}} \right]
+\]
+
+\[
+\implies P[z > - 1.4] = 1 - P[z \leq - 1.4]
+\]
+
+```{r}
+1 - pnorm(-1.4)
+```
+
+Therefore, our *p*-value is 0.9192. We are going to correctly reject
+our hypothesis around 92% of the time. To prove this, we can increase
+our sample size.
+
+### Extra credit
+This involves 2 regions for rejection.
+
+# Problem 3
+The following questions regard *t* distributions.
+
+1. Using the *t*-distribution table, find the 95th percentile of
+   $t(11)$ denoted by ${t}_{0.05}(11)$ and the 5th percentile of
+   $t(11)$.
+2. Find the interval containing the middle 90% of values of t
+   distribution with 11 degrees of freedom and use your answer to
+   provide the 90% confidence interval formula for the population mean
+   $\mu$ based on a sample of size 12 with sample standard deviation
+   /S/.
+3. How does the 90% confidence interval formula in part 2 change if
+   the sample size increases to 24?
+4. How does the confidence interval formula in part 2 change if the
+   confidence level increases to 95% with the same sample size of 12?
+5. Suppose that the one-sample t statistic for testing $H_0 : \mu =
+   10$ versus $H_A : \mu > 10$ from a sample of $n = 18$ observations
+   has the value $t = 2.05$.
+   - What are the degrees of freedom for this statistic?
+   - Give the two critical values from the *t*-distribution table that
+     bracket t and express the two values using the notation
+     ${t}_{\alpha}(k)$ with appropriate $\alpha$ and $k$.
+   - Between what two values does the P-value of the test fall?
+   - Is the value $t = 2.05$ significant at the 5% level? Is it significant at the 1% level?
+   - Using R, find the exact P-value of $t = 2.05$.
+
+## Solution
+
+### Part 1
+From the tables,
+
+\[
+{t}_{0.05}(11) = 1.796
+\]
+
+\[
+{t}_{0.95}(11) =
+\]
+
+### Part 2
+The interval is given by $\bar{X} \pm t(11) \frac{S}{\sqrt{n}}$.
+Substituting, the values, the interval turns out to be
+
+\[
+\bar{X} \pm {t}_{\frac{0.1}{2}}(11) \frac{S}{\sqrt{12}}
+\]
+
+\[
+\bar{X} \pm 0.5185 S
+\]
+
+### Part 3
+Now, our degrees of freedom has changed. $n - 1 = 23$.
+${t}_{\frac{0.1}{2}}(23) = 1.714$. Our new interval is $\bar{X} \pm
+1.714 \frac{S}{\sqrt{24}}$
+
+### Part 4
+Now, $n = 12$ and $\alpha = 0.05$. Our new interval is now $\bar{X}
+\pm {t}_{\frac{0.05}{2}}(11) \frac{S}{\sqrt{n}}$. From the tables,
+${t}_{0.025}(11) = 2.201$. Therefore, the interval becomes $\bar{X}
+\pm 2.201 \frac{S}{\sqrt{12}}$, i.e., widens.
+
+### Part 5
+Here, $n = 18$ and $t = 2.05$. We also know that we are testing $H_0 :
+\mu = 10$ versus $H_A : \mu > 10$. From the tables,
+
+- Degrees of freedom = $n - 1$ = 17
+- The critical values are 1.74 and 2.11. $1.74 \leq 2.05 \leq 2.11$.
+  It is the same as ${t}_{0.05}(17) \leq {t}_{\alpha}(17) \leq
+  {t}_{0.025}(17)$.
+- The p values fall in the range (0.05, 0.025). In terms of intervals,
+  $0.05 \geq p \geq 0.025$
+- It is significant at 5% level as $0.05 \geq p \geq 0.025$ but not
+  significant at 1% level since $0.01 < 0.025 < p < 0.05$.
+- The exact value is 0.028
+
+```{r}
+1 - pt(2.05, 17)
+```
+
+# Problem 4
+The National Endowment for the Humanities sponsors summer institutes
+to improve the skills of high school teachers of foreign languages.
+One such institute hosted 20 French teachers for 4 weeks. At the
+beginning of the period, the teachers were given the Modern Language
+Association’s listening test of understanding of spoken French. After
+4 weeks of immersion in French, the listening test was given again.
+The maximum possible score on the test is 36. To analyze these data,
+we first subtract the pretest score from the posttest score to obtain
+the improvement for each teacher. These 20 differences form a single
+sample. Load the data set (`frenchteachers.RData`) to do the analyses
+below.
+
+1. Define the appropriate parameter $\mu$ in words precisely for
+   measuring the change of the teachers’ listening skills from the
+   pretest to the posttest.
+2. Give an estimate of $\mu$, and provide the standard error of your
+   estimate. Find the 95% confidence interval for $\mu$. What
+   assumptions are needed for this confidence interval to be valid?
+   Check any assumptions that you can.
+3. State appropriate null and alternative hypotheses for examining the
+   question of whether or not the course is associated with an
+   improvement in French skills. Perform a *t*-test to test this
+   hypothesis – make sure you calculate the appropriate test
+   statistic, calculate a p-value, and summarize your conclusion
+   (assuming an level of $\alpha = 0.05$) in the context of the
+   problem.
+4. Using `t.test` in R, verify your results in parts 2 and 3.
+5. What would be a causal interpretation of the conclusion in part 4?
+   Are you comfortable with this interpretation? Explain in a sentence
+   or two.
+6. Use the sign test to assess whether the summer institute is
+   associated with an improvement in French listening skills. Make
+   sure to state hypotheses, calculate the appropriate test statistic,
+   calculate a p-value, and summarize your conclusion in the context
+   of the problem.
+
+## Solution
+One set of people with 2 test scores and we are going to do a pair
+test.
+
+Let's load the data set first
+
+```{r}
+load("./frenchteachers.RData")
+```
+
+### Part 1
+The appropriate parameter for measuring change is the difference in
+scores between the tests given at the start of the program and the end
+of it. In other words,
+
+\[ \mu = {\mu}_{post} - {\mu}_{pre} \]
+
+### Part 2
+We assume normality of the data. Therefore, we have to first check if
+this is true.
+
+```{r, fig.height=3.5, fig.width=6.5, fig.show='asis', fig.align='center'}
+par(mfrow = c(1, 2), cex = 0.5)
+hist(frenchteachers$gain, main = "Histogram of gain")
+qqnorm(frenchteachers$gain)
+qqline(frenchteachers$gain)
+```
+
+Since this seems to follow a normal distribution, we can use the
+normal distribution if the sample size is high. We can also use a
+*t*-distribution since this satisfies the pre-requisites for it. To do
+that, we have to first calculate the mean and standard deviation of
+the sample given.
+
+```{r}
+ mean(frenchteachers$gain)
+```
+
+```{r}
+sd(frenchteachers$gain)
+```
+
+We know that the degrees of freedom is $n - 1 = 19$ for this case.
+From the tables, we know ${t}_{0.05}(19) = 1.729$.
+
+\[ \text{C.I} = \bar{x} \pm {t}_{0.05}(19) \frac{S}{\sqrt{n}} = 0.95
+\pm 1.729 \times \frac{1.395}{\sqrt{20}} = (0.411, 1.489) \]
+
+Therfore, the 95% confidence interval is (0.411, 1.489).
+
+### Part 3
+The null and alternative hypotheses for this problem is given below
+
+\[ {H}_{0} : \mu = 0 \]
+
+\[ {H}_{A} : \mu > 0 \]
+
+We are given that $\alpha = 0.05$. Now, let's construct the *t*-test
+statistic
+
+\[
+t = \frac{\bar{x} - \mu}{\frac{S}{\sqrt{n}}} = \frac{0.95 - 0}{\frac{1.395}{\sqrt{20}}} = 3.045
+\]
+
+From the tables, for degrees of freedom 19, it's between 0.005 and
+0.0025. We can get the exact value from *R*.
+
+```{r}
+1 - pt(3.045, 19)
+```
+
+The *p*-value is 0.0033.
+
+### Part 4
+
+```{r}
+t.test(frenchteachers$gain, alternative = "greater", mu = 0)
+```
+
+### Part 5
+
+The *p*-value from part 4 is 0.0033 < 0.05 and this means that we
+*reject* the null hypothesis that $\mu = 0$ and, since the sample mean
+is 0.95, the mean is 0.95. The causal interpretation from this data is
+that the 4 weeks of immersion helped. The improvement is 0.95 or 2.79%
+improvement. I'm not comfortable with the interpretation since no
+information about how the French teachers were selected is given. If
+the experiment was double-blind and randomized, then there is more
+merit to the experiment. Otherwise, this is not a good experiment
+setup.
+
+### Part 6
+  
+\[
+H_0 : p = 0.5 \text{ vs } {H}_{A} : p > 0.5
+\]
+
+To perform the sign test, we need the no. of observations that are
+valid. The following piece of code finds the number of observations
+that follow our requirement.
+
+```{r}
+length(which(frenchteachers$gain > 0))
+```
+
+```{r}
+length(which(frenchteachers$gain == 0))
+```
+
+```{r}
+length(which(frenchteachers$gain < 0))
+```
+
+In 20 trials, 13 had scored higher after the immersion, 3 had scored
+lower, and 4 had scored the same $\implies {x}_{obs} = 13$. Since,
+there is a tie, we delete those observations and the sample size is
+now 16.
+
+Now, we calculate the *t*-statistic
+
+\[
+t = \frac{\bar{x} - \mu}{\frac{S}{\sqrt{n}}} = \frac{0.95 - 0}{\frac{1.3945}{\sqrt{16}}} = 2.72
+\]
+
+From the tables, considering degrees of freedom of 15, we get $0.01 < p < 0.005$
+and we can get the exact value from `R`.
+
+```{r}
+1 - pt(2.72, 15)
+```
+
+Because $p = 0.008 < 0.05$, we reject the null and conclude
+the immersion course did help the French teachers perform better in
+the test.
